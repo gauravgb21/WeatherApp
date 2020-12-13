@@ -9,6 +9,7 @@ import WeatherDetails from './organisms/WeatherDetails/WeatherDetails';
 import PermissionModal from './organisms/PermissionModal/PermissionModal';
 
 import { CITY_LIST } from '../config/city_list';
+import { API_KEY } from '../../apiKey';
 
 import './app.scss';
 
@@ -23,7 +24,7 @@ const App = props => {
     
     const MAX_CITY_LIMIT = 5;
 
-    const apiKey = '5a16650cf0b28a270d459c9fc2deaea7';
+    const apiKey = API_KEY;
 
     const fetchPlacesData = payload => {
         const cityIds = [];
