@@ -1,0 +1,15 @@
+.wa-modal-btn {
+    padding: .8rem;
+    width: 50%;
+    border: none;
+    color : #3370e2;
+    background-color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+
+    &:first-child {
+        border-right: .1rem solid #d9d9d9;
+    }
+}

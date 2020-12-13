@@ -1,0 +1,18 @@
+@import '../../_settings/animations';
+
+.wa-daily-frct-card {
+    width: 9rem;
+    padding: .5rem;
+    flex-shrink: 0;
+    cursor: pointer;
+    background-color: #fff;
+    transition: all .3s;
+    
+    div {
+        text-align: center;
+    }
+
+    &--clicked {
+        background-color: rgba(124, 181, 236,.2);
+    }
+}

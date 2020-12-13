@@ -1,0 +1,13 @@
+.wa-footer-card {
+    padding: 1rem;
+    width: 49%;
+    margin: 1rem;
+
+    &--light-blue {
+        background-color: rgba(124, 181, 236,.15);
+    }
+
+    &--text-right {
+        text-align: right;
+    }
+}

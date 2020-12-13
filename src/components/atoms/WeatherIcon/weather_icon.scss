@@ -1,0 +1,12 @@
+.wa-weather-icon {
+    display: inline-block;
+    width: 3.5rem;
+
+    &--large{
+        width: 4rem;
+    }
+
+    &--small {
+        width: 2.5rem;
+    }
+}

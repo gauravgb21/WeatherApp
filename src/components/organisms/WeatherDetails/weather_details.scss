@@ -1,0 +1,21 @@
+@import '../../_settings/variables';
+
+.wa-weather-details {
+    margin-top: 2rem;
+    padding: .5rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    box-shadow: .5rem .5rem 2rem rgba($color-black-dark,.2);
+
+    &__pres-hum {
+        display: flex;
+    }
+
+    &__sun-set {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+
+}

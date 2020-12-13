@@ -1,0 +1,28 @@
+@import '../../_settings/animations';
+
+.wa-search-list-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 .5rem;
+    cursor: pointer;
+
+    &__city-name {
+        padding-top: 1rem;
+        animation: slide-up-text .3s ease-out;
+    }
+
+    &__w-details {
+        display: flex;
+        padding: .5rem;
+        animation: slide-up-text .3s ease-out;
+
+        span:first-child {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    &:hover {
+        background-color: #f2f2f2;
+    }
+}

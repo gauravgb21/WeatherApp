@@ -1,0 +1,9 @@
+@keyframes fade-in-background {
+    from {background-color: none;}
+    to {background-color: rgba(124, 181, 236,.2);}
+}
+
+@keyframes slide-up-text {
+    from {position: relative;top: 5rem;}
+    to {position: relative;top: 0;}
+}
