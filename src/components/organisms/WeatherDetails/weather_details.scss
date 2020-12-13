@@ -1,4 +1,5 @@
 @import '../../_settings/variables';
+@import '../../_settings/animations';
 
 .wa-weather-details {
     margin-top: 2rem;
@@ -6,6 +7,7 @@
     margin-bottom: 1rem;
     border-radius: 1rem;
     box-shadow: .5rem .5rem 2rem rgba($color-black-dark,.2);
+    animation : fade-in 2s;
 
     &__pres-hum {
         display: flex;

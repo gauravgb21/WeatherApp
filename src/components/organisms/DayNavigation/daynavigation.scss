@@ -1,7 +1,10 @@
+@import '../../_settings/animations';
+
 .wa-day-navigation {
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
     padding: 1rem;
     overflow: auto;
+    animation : fade-in 1.5s;
 }

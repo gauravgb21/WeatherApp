@@ -17,7 +17,6 @@ const App = props => {
     const [dailyForecastData,SetDailyForecastData] = useState([]);
     const [hourlyForecastData,setHourlyForecastData] = useState([]);
     const [currentWeatherData,setCurrentWeatherData] = useState([]);
-    const [seriesData,setSeriesData] = useState([]);
     const [showLoader,setShowLoader] = useState(false);
     const [clickedCity,setClickedCity] = useState('');
     const [showPermissionModal,setShowPermissionModal] = useState(false);
@@ -69,33 +68,30 @@ const App = props => {
                  //create current data
                  const newCurrentWeatherData = {
                      dt : result.current.dt,
-                     humidity : result.current.humidity,
-                     pressure : result.current.pressure,
-                     sunrise : result.current.sunrise,
-                     sunset : result.current.sunset,
-                     temp : Math.round(result.current.temp),
-                     desc : result.current.weather[0].main,
-                     icon : result.current.weather[0].icon
+                     dayName : moment.unix(result.current.dt).format('dddd').substr(0,3)
                  };
                  
                  //create hourly data
                  const newHourlyForecastData = [];
                  const newSeriesData = [];
+                 const dailyData = [];
 
                  result.hourly.forEach((itr,ind) => {
                      newHourlyForecastData.push({
                         dt : itr.dt,
+                        dayName : moment.unix(itr.dt).format('dddd').substr(0,3),
                         humidity : itr.humidity,
                         pressure : itr.pressure,
                         temp : Math.round(itr.temp),
                         dayType : itr.weather[0].main,
                         icon : itr.weather[0].icon
                      });
-                     const newObj = {
-                         x : parseInt(moment(itr.dt).format('h')) + ind,
-                         y : Math.round(itr.temp)
-                     };
-                     newSeriesData.push(newObj);
+                     dailyData.push(moment.unix(itr.dt).format('dddd'));
+                    //  const newObj = {
+                    //      x : parseInt(moment.unix(itr.dt).format('h')),
+                    //      y : Math.round(itr.temp)
+                    //  };
+                    //  newSeriesData.push(newObj);
                  });
                  
                  //create Daily Data
@@ -103,17 +99,15 @@ const App = props => {
                  result.daily.forEach((itr,idx) => {
                      newDailyForecastData.push({
                         dt : itr.dt,
-                        dayName : moment(itr.dt).format('dddd').substr(0,3),
+                        dayName : moment.unix(itr.dt).format('dddd').substr(0,3),
                         humidity : itr.humidity,
                         pressure : itr.pressure,
-                        sunrise : moment(itr.sunrise).format('h:mm a'),
-                        sunset : moment(itr.sunset).format('h:mm a'),  
+                        sunrise : itr.sunrise,
+                        sunset : itr.sunset,  
                         maxTemp : Math.round(itr.temp.max),
                         minTemp : Math.round(itr.temp.min),
                         dayType : itr.weather[0].main,
-                        icon : itr.weather[0].icon,
                         isClicked : false,
-                        dateTime : moment(itr.dt).format('MMMM Do YYYY, h:mm:ss a'),
                         id : idx
                      });
                  });
@@ -123,7 +117,6 @@ const App = props => {
                  setCurrentWeatherData(newCurrentWeatherData);
                  setHourlyForecastData(newHourlyForecastData);
                  SetDailyForecastData(newDailyForecastData);
-                 setSeriesData(newSeriesData);
                  setShowLoader(false);
               })
              .catch(err => console.log('Error while fetching one call api '));
@@ -198,17 +191,34 @@ const App = props => {
     }
 
     useEffect(() => {
-        //get user's location Details code goes here
         setShowPermissionModal(true);
     },[]);
 
     const dataForWeatherDetails = dailyForecastData.filter((data) => data.isClicked);
+
+    let isThere = false;
+    const seriesData = [];
+    hourlyForecastData.forEach((data) => {
+        if(dataForWeatherDetails.length > 0){
+            if(data.dayName === dataForWeatherDetails[0].dayName){
+                seriesData.push({ x : data.dt * 1000, y : data.temp  });
+                isThere = true;
+            }
+        }
+    });
+
+    //paste duplicate data incase hours go beyond 48
+    if(dataForWeatherDetails.length > 0 && !isThere){
+        for(let i = 0; i < 24; i++)seriesData.push({ x : hourlyForecastData[i].dt * 1000, y : hourlyForecastData[i].temp  });
+    }
+
     const weatherDetailsElement = dataForWeatherDetails.length > 0 ? (
     <>
         <DayNavigation dailyForecastData={dailyForecastData} action={handleNavigationActions}/>
-        <WeatherDetails seriesData={seriesData} dataForWeatherDetails={dataForWeatherDetails[0]}/>
+        <WeatherDetails seriesData={seriesData} currentWeatherData={currentWeatherData} dataForWeatherDetails={dataForWeatherDetails[0]}/>
     </>
     ) : '';
+    
     const loaderElement = showLoader ?  (<div className={'wa-loadmask'}>
         <div className={'wa-loader-cont'}>
             <Loader type="ThreeDots" color="#00BFFF" height={50} width={50}/>
@@ -221,6 +231,8 @@ const App = props => {
             <PermissionModal action={handleModalActions} />
         </div>
     ) : '';
+
+    console.log('Series data ',seriesData);
 
     return(
         <main className={dataForWeatherDetails.length === 0 ? 'wa-app-cont--nodata' : 'wa-app-cont'}>

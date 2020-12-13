@@ -1,6 +1,7 @@
 import React from 'react';
 import HighCharts from 'highcharts';
 import HighChartsReact from 'highcharts-react-official';
+import moment from 'moment';
 
 import DailyForecastCardText from '../../atoms/DailyForecastCardText/DailyForecastCardText';
 
@@ -9,7 +10,7 @@ import WeatherDetailsFooterCard from '../../molecules/WeatherDetailsFooterCard/W
 import './weather_details.scss';
 
 const WeatherDetails = props => {
-    const { seriesData = [] , dataForWeatherDetails = {} } = props;
+    const { seriesData = [] , currentWeatherData = {} , dataForWeatherDetails = {} } = props;
 
     const chartElement = (
         <HighChartsReact 
@@ -26,8 +27,13 @@ const WeatherDetails = props => {
                 enabled : false
             },
             xAxis : {
+                type : 'datetime',
                 labels : {
-                    enabled : true
+                    enabled : true,
+                    formatter: function () {
+                        return HighCharts.dateFormat('%H:%M', this.value);
+    
+                    }
                 }
             },
             yAxis : {
@@ -36,6 +42,7 @@ const WeatherDetails = props => {
                 }
             },
             series: [{
+                name : 'Temperature',
                 data : [...seriesData]
             }]
         }}/>
@@ -44,6 +51,11 @@ const WeatherDetails = props => {
     const chartElementForSunRise = (
         <HighChartsReact 
           highcharts={HighCharts} 
+          plotOptions={{
+              areaSpline : {
+                  fillColor : 'orange'
+              }
+          }}
           options={{
             chart: {
                 type: 'areaspline',
@@ -66,10 +78,16 @@ const WeatherDetails = props => {
                 }
             },
             series: [{
-                data : [-12,0,12,0,-12]
+                fillColor : 'rgba(255, 165, 0,.3)',
+                color : 'orange',
+                data : [0,12,0]
             }]
         }}/>
     );
+
+    console.log('sun rise ',dataForWeatherDetails.sunrise);
+    console.log('sunset ',dataForWeatherDetails.sunset);
+    console.log('current ',currentWeatherData.dt);
 
     return(
         <div className={'wa-weather-details'}>
@@ -82,8 +100,8 @@ const WeatherDetails = props => {
                 <WeatherDetailsFooterCard className={'wa-footer-card--light-blue'} primaryText={'Humidity'} secondaryText={dataForWeatherDetails.humidity + ' %'}/>
             </div>
             <div className={'wa-weather-details__sun-set'}>
-                <WeatherDetailsFooterCard  primaryText={'Sunrise'} secondaryText={dataForWeatherDetails.sunrise}/>
-                <WeatherDetailsFooterCard  className={'wa-footer-card--text-right'} primaryText={'Sunset'} secondaryText={dataForWeatherDetails.sunset}/>
+                <WeatherDetailsFooterCard  primaryText={'Sunrise'} secondaryText={moment.unix(dataForWeatherDetails.sunrise).format('h:mm a')}/>
+                <WeatherDetailsFooterCard  className={'wa-footer-card--text-right'} primaryText={'Sunset'} secondaryText={moment.unix(dataForWeatherDetails.sunset).format('h:mm a')}/>
             </div>
             <div className={'wa-weather-details__chart-sunrise'}>
                 {chartElementForSunRise}
